@@ -121,7 +121,7 @@ fallback behavior remain the same.
 
 ## Opening articles on phones
 
-Article buttons open new tabs. Streamlit Cloud blocks top-frame navigation.
-If LINE prevents opening the tab, expand **Link not opening? Copy article URL**
-and paste the URL into Chrome or Safari outside LINE. LINE compatibility must
-be tested on a phone; desktop testing cannot verify it.
+**Read original article** opens the publisher in the current browser tab, leaving
+the Streamlit frame. Use the browser Back button to return (session selections
+may reset). **Open in new tab** remains available as an alternative.
+The primary link has a large touch target and does not require a popup.
