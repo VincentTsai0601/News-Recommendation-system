@@ -85,7 +85,7 @@ class AppTests(unittest.TestCase):
         app.radio[0].set_value("Sample data").run()
         self.assertIn("No matching articles", app.info[0].value)
 
-    def test_article_links_use_current_tab_and_escape_url(self):
+    def test_article_links_use_allowed_new_tab_and_escape_url(self):
         from html.parser import HTMLParser
 
         class Links(HTMLParser):
@@ -107,7 +107,8 @@ class AppTests(unittest.TestCase):
         for block in app.markdown:
             parser.feed(block.value)
         self.assertEqual(len(parser.links), 1)
-        self.assertEqual(parser.links[0]["target"], "_top")
+        self.assertEqual(parser.links[0]["target"], "_blank")
+        self.assertEqual(app.code[0].value, url)
         self.assertEqual(parser.links[0]["href"], url)
         self.assertNotIn("onclick", parser.links[0])
         self.assertFalse(app.exception)
