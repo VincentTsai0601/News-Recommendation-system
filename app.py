@@ -73,7 +73,15 @@ def main():
             st.text(f"{article['category']} | {article['source']} | {article.get('language', 'English')} | {published}")
             summary = article["summary"]
             st.text(summary if len(summary) <= 240 else summary[:240].rstrip() + "…")
-            st.link_button("Read original article", article["url"])
+            # _top leaves the Streamlit Cloud frame in the current browser tab.
+            article_url = escape(article["url"], quote=True)
+            st.markdown(
+                f'<a class="article-open" href="{article_url}" target="_top">'
+                'Read original article ↗</a>',
+                unsafe_allow_html=True,
+            )
+            st.caption("Opens here. Use your browser’s Back button to return.")
+            st.link_button("Open in new tab", article["url"])
     st.markdown('<div class="world-footer">World / Brief &nbsp; — &nbsp; British-inspired design. Six languages. A global outlook.</div>', unsafe_allow_html=True)
 
 

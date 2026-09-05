@@ -84,3 +84,30 @@ class AppTests(unittest.TestCase):
                 self.assertIn(title, [s.value for s in app.subheader])
         app.radio[0].set_value("Sample data").run()
         self.assertIn("No matching articles", app.info[0].value)
+
+    def test_article_links_use_current_tab_and_escape_url(self):
+        from html.parser import HTMLParser
+
+        class Links(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.links = []
+
+            def handle_starttag(self, tag, attrs):
+                if tag == "a":
+                    attributes = dict(attrs)
+                    if attributes.get("class") == "article-open":
+                        self.links.append(attributes)
+
+        url = 'https://example.com/article?a=1&title="news"'
+        self.articles[0] = dict(self.articles[0], url=url)
+        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        app.selectbox[0].set_value("Chinese").run()
+        parser = Links()
+        for block in app.markdown:
+            parser.feed(block.value)
+        self.assertEqual(len(parser.links), 1)
+        self.assertEqual(parser.links[0]["target"], "_top")
+        self.assertEqual(parser.links[0]["href"], url)
+        self.assertNotIn("onclick", parser.links[0])
+        self.assertFalse(app.exception)

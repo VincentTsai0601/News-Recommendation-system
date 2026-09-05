@@ -118,3 +118,10 @@ Language support means reading original-language articles, not translating the
 interface or news. Other topics may have no matches in the new languages.
 Samples remain English-only. Feed failures, ten-minute caching, and session
 fallback behavior remain the same.
+
+## Opening articles on phones
+
+**Read original article** opens the publisher in the current browser tab, leaving
+the Streamlit frame. Use the browser Back button to return (session selections
+may reset). **Open in new tab** remains available as an alternative.
+The primary link has a large touch target and does not require a popup.

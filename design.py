@@ -47,6 +47,13 @@ STYLE = """
 .world-strip { gap:12px; font-size:9px; }
 [data-testid="stMainBlockContainer"] { padding-top:1rem; }
 }
+.article-open { display:inline-flex; align-items:center; justify-content:center;
+ min-height:48px; padding:10px 20px; box-sizing:border-box;
+ background:#243e35; color:#fffaf0!important; text-decoration:none!important;
+ border-radius:3px; font-size:15px; font-weight:600; touch-action:manipulation; }
+.article-open:hover { background:#38594b; }
+.article-open:focus-visible { outline:3px solid #843c43; outline-offset:3px; }
+@media(max-width:700px) { .article-open { width:100%; } }
 </style>
 """
 
