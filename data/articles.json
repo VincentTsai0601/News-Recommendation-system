@@ -1,0 +1,110 @@
+[
+  {
+    "id": "tech-01",
+    "title": "Apple announces iPhone 16 models",
+    "summary": "Apple introduced the iPhone 16 and iPhone 16 Plus with its A18 chip.",
+    "category": "Technology",
+    "source": "Apple Newsroom",
+    "published_at": "2024-09-09",
+    "url": "https://www.apple.com/newsroom/2024/09/apple-introduces-iphone-16-and-iphone-16-plus/"
+  },
+  {
+    "id": "tech-02",
+    "title": "MacBook Air receives an M3 update",
+    "summary": "Apple updated both MacBook Air sizes with the M3 processor.",
+    "category": "Technology",
+    "source": "Apple Newsroom",
+    "published_at": "2024-03-04",
+    "url": "https://www.apple.com/newsroom/2024/03/apple-unveils-the-new-13-and-15-inch-macbook-air-with-the-powerful-m3-chip/"
+  },
+  {
+    "id": "tech-03",
+    "title": "New iPad Pro brings M4 and OLED displays",
+    "summary": "Apple announced an iPad Pro redesign featuring an M4 chip and tandem OLED display.",
+    "category": "Technology",
+    "source": "Apple Newsroom",
+    "published_at": "2024-05-07",
+    "url": "https://www.apple.com/newsroom/2024/05/apple-unveils-stunning-new-ipad-pro-with-m4-chip-and-apple-pencil-pro/"
+  },
+  {
+    "id": "business-01",
+    "title": "Apple publishes fiscal second-quarter results",
+    "summary": "Apple released its financial report for the second quarter of fiscal 2024.",
+    "category": "Business",
+    "source": "Apple Newsroom",
+    "published_at": "2024-05-02",
+    "url": "https://www.apple.com/newsroom/2024/05/apple-reports-second-quarter-results/"
+  },
+  {
+    "id": "business-02",
+    "title": "Apple shares fiscal third-quarter results",
+    "summary": "Apple reported financial results for the quarter ending June 29, 2024.",
+    "category": "Business",
+    "source": "Apple Newsroom",
+    "published_at": "2024-08-01",
+    "url": "https://www.apple.com/newsroom/2024/08/apple-reports-third-quarter-results/"
+  },
+  {
+    "id": "business-03",
+    "title": "Apple releases fiscal fourth-quarter results",
+    "summary": "Apple published its final quarterly financial results for fiscal 2024.",
+    "category": "Business",
+    "source": "Apple Newsroom",
+    "published_at": "2024-10-31",
+    "url": "https://www.apple.com/newsroom/2024/10/apple-reports-fourth-quarter-results/"
+  },
+  {
+    "id": "science-01",
+    "title": "Europa Clipper begins its journey",
+    "summary": "NASA launched Europa Clipper toward Jupiter to investigate the icy moon Europa.",
+    "category": "Science",
+    "source": "Associated Press",
+    "published_at": "2024-10-14",
+    "url": "https://apnews.com/article/88d680ae8625c239370865b36d5d69a8"
+  },
+  {
+    "id": "science-02",
+    "title": "PACE launches to observe oceans and atmosphere",
+    "summary": "NASA's PACE satellite launched to collect observations of ocean ecosystems and the atmosphere.",
+    "category": "Science",
+    "source": "NASA",
+    "published_at": "2024-02-08",
+    "url": "https://www.nasa.gov/news-release/nasa-launches-new-climate-mission-to-study-ocean-atmosphere/"
+  },
+  {
+    "id": "science-03",
+    "title": "NASA looks back on its 2024 missions",
+    "summary": "NASA reviewed a year of exploration, including Europa Clipper, PACE, and Webb discoveries.",
+    "category": "Science",
+    "source": "NASA",
+    "published_at": "2024-12-06",
+    "url": "https://www.nasa.gov/news-release/nasa-accelerates-space-exploration-earth-science-for-all-in-2024/"
+  },
+  {
+    "id": "sports-01",
+    "title": "Boston secures its eighteenth NBA title",
+    "summary": "The Celtics defeated Dallas in Game 5 to win the 2024 NBA championship.",
+    "category": "Sports",
+    "source": "Associated Press",
+    "published_at": "2024-06-18",
+    "url": "https://apnews.com/article/0cdf7b0fb7bc641a5007c8dff836832a"
+  },
+  {
+    "id": "sports-02",
+    "title": "Celtics take a two-game Finals lead",
+    "summary": "Boston beat Dallas in Game 2 to move ahead 2-0 in the NBA Finals.",
+    "category": "Sports",
+    "source": "Associated Press",
+    "published_at": "2024-06-10",
+    "url": "https://apnews.com/article/5ae2a908914f016ee6d5a5eaa8e09afc"
+  },
+  {
+    "id": "sports-03",
+    "title": "Boston considers its next season after title win",
+    "summary": "After winning the championship, the Celtics looked ahead to defending their title.",
+    "category": "Sports",
+    "source": "Associated Press",
+    "published_at": "2024-06-18",
+    "url": "https://apnews.com/article/7e0d3d8569a115196497d3140e1b98d4"
+  }
+]
