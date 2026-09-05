@@ -1,16 +1,12 @@
 # News for you
 
-A beginner-friendly local news recommendation app built with Python and Streamlit.
-Choose topics and get up to 10 articles, newest first. The app includes 12 sample
-articles from 2024 across Technology, Business, Sports, and Science. This is not
-a live news feed.
+A small Streamlit app for English and Chinese news, with topic and language filters.
 
-## Setup and run
+## Run locally
 
-You need Python 3.10 or newer. Tested with Python 3.10 and Streamlit 1.63.0.
-Open a terminal in this project folder.
+Open a terminal in the project folder. Python 3.10 or newer is required.
 
-On Windows PowerShell:
+Windows PowerShell:
 
 ```powershell
 python -m venv .venv
@@ -18,107 +14,87 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
-Using the environment's Python directly avoids PowerShell activation restrictions.
-If `python` is not found but the Python launcher is installed, use `py -3` for the
-first command.
-
-On macOS or Linux:
+On macOS/Linux, create and activate an environment with `python3 -m venv .venv`
+and `source .venv/bin/activate`, then run:
 
 ```sh
-python3 -m venv .venv
-source .venv/bin/activate
 python -m pip install -r requirements.txt
 python -m streamlit run app.py
 ```
 
-Open the local URL printed in the terminal (usually http://localhost:8501).
-Stop the server with Ctrl+C. Installing dependencies needs internet; browsing the
-bundled dataset does not. Original article links need internet access.
+Open the local URL printed in the terminal. Stop with Ctrl+C.
+Live feeds require internet access; no API key is required.
 
-## Use the app
+## Read live news
 
-1. On first load, see the 10 newest articles across all topics.
-2. Select one or more topics and click **Get recommendations**.
-3. Read each article's summary, category, source, and publication date. Use
-   **Read original article** to visit its source.
-4. Change your topics and click the button again. Clear all topics to see all news.
+- **Live news** is the default. English feeds come from BBC; Chinese feeds come
+  from RTHK and use Traditional Chinese. Articles are not translated.
+- Choose **All**, **English**, or **Chinese** under **Language / 語言**.
+- Select topics and click **Get recommendations**. No topic selection includes all topics.
+- Click **Refresh news** to fetch again immediately.
+- Results are cached for 10 minutes. An interaction after cache expiry fetches again;
+  leaving the page idle does not continuously poll. Publication timing depends on publishers.
+- The page shows the last feed-check time in UTC, plus each article's publication time.
+- Up to 10 matches appear, newest first, with ID as a stable tie-breaker.
+  All languages are combined by time, without a guaranteed quota per language.
 
-Selections are held only in the current Streamlit session; nothing is saved to
-disk. A fresh session starts with all topics.
+Available live topics are World, Business, Sports, Technology, and Science.
+The current Chinese feeds cover World, Business, and Sports. Selecting Chinese
+with Technology or Science can produce no matches; the app explains how to change filters.
 
-## How recommendations work
+## Feed failures and offline samples
 
-An article matches if its category equals any selected topic. With no selection,
-all articles match. Matches are sorted by publication date descending, then ID
-ascending for equal dates, and limited to 10. Topic choices come from the dataset.
-There are no relevance scores or machine learning models.
+A failing feed displays a warning while other feeds still load. If every feed
+fails, previously loaded news from the current session is shown with its earlier
+update time. On a first-load failure, use **Refresh news** or switch to **Sample data**.
+An outage response is also cached for up to 10 minutes unless manually refreshed.
 
-## Run tests
+Sample mode uses 12 English articles from 2024 in `data/articles.json`.
+It is explicitly labeled and works offline after dependencies are installed.
+It is never silently presented as live news. Original links need internet access.
 
-Windows PowerShell:
+## Tests
 
 ```powershell
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-With an activated virtual environment on any platform:
+Tests use mocked feed responses, so they require no network. They cover language
+and topic filters, timestamps and timezones, result limits, malformed entries,
+network failures, duplicate links, caching, refresh, and the Streamlit reader flow.
 
-```sh
-python -m unittest discover -s tests
-```
+## Files
 
-Tests cover filtering, ordering, ties, limits, data validation, and the Streamlit
-reader flow using AppTest. No live article requests are made during tests.
+| File | Purpose |
+| --- | --- |
+| `app.py` | Interface, cached fetches, session fallback |
+| `live_news.py` | Publisher feed list, bounded downloads, RSS parsing |
+| `recommender.py` | Language/topic filtering and chronological ordering |
+| `data_loader.py` | Sample JSON loading and validation |
+| `data/articles.json` | Offline sample articles |
+| `tests/` | Unit and interface tests |
+| `SPEC.md` | Original specification and live-news extension |
+| `requirements.txt` | Streamlit dependency |
 
-## Project files
+To add a feed, edit `FEEDS` in `live_news.py`: each entry contains publisher,
+language (`English` or `Chinese`), topic, and RSS URL. Entries need a title,
+HTTP(S) article link, and valid publication date with timezone.
+Feeds are fetched concurrently, with a 12-second socket timeout and 2 MB limit
+per response. Invalid entries are skipped; duplicate article URLs are removed.
+HTML descriptions become plain text excerpts limited to 500 characters.
+The app reads feed summaries, not full article pages.
 
-```text
-app.py                    Streamlit page and session preferences
-recommender.py            Topic filtering and result ordering
-data_loader.py            JSON loading and validation
-data/articles.json        Sample articles with source links
-tests/test_recommender.py  Recommendation tests
-tests/test_data_loader.py  Data validation tests
-tests/test_app.py          Interface behavior tests
-requirements.txt          Streamlit dependency
-SPEC.md                   Original version 1 specification
-```
+To edit samples, keep a UTF-8 JSON list with unique string `id`, `title`,
+`summary`, `category`, `source`, `published_at` (YYYY-MM-DD), and `url`.
+All fields must be non-empty strings. The sample loader validates the format.
 
-## Replace the sample data
+## Sources and limitations
 
-Edit `data/articles.json` as a UTF-8 JSON list. Each entry must have the following
-non-empty string fields, without surrounding whitespace:
-
-```json
-{
-  "id": "science-04",
-  "title": "Your article headline",
-  "summary": "Your own short summary of the article.",
-  "category": "Science",
-  "source": "Publisher name",
-  "published_at": "2024-09-01",
-  "url": "https://example.com/replace-with-a-real-article"
-}
-```
-
-Use a unique ID, a real date in `YYYY-MM-DD` format, and an HTTP or HTTPS article
-URL with a host. The example URL above is a placeholder: replace it with your
-source. Match category spelling consistently. New categories appear automatically.
-Save the file and click **Get recommendations** to reload the data. Update the
-sample-data caption in `app.py` if you change the date range or content type.
-
-Missing or malformed data displays a helpful error. Fix the indicated entry and
-rerun the page. An empty list (`[]`) displays “No articles available.” An unmatched
-selection displays a suggestion to change topics.
-
-## Sample sources and limitations
-
-The bundled titles and summaries are short paraphrases of linked reporting and
-announcements from Apple Newsroom, NASA, and Associated Press. Every entry includes
-its original source URL. The small collection is for demonstrating behavior and
-does not represent balanced coverage; several entries concern the same company or
-sport. External publishers may change links or restrict access.
-
-Version 1 has no accounts, database, live ingestion, scraping, saved reading
-history, or deployment setup. Recommendations depend only on selected categories
-and dates. The loader checks URL format, not whether a remote page is reachable.
+Chinese feed URLs are listed on [RTHK's RSS page](https://news.rthk.hk/rthk/ch/rss.htm).
+English feeds include [BBC World](https://feeds.bbci.co.uk/news/world/rss.xml)
+and [BBC Technology](https://feeds.bbci.co.uk/news/technology/rss.xml).
+Publisher availability and coverage can change. Some feeds redirect to HTTP.
+News is near real-time, not an instant streaming service. There is no translation,
+account, saved reading history, database, or machine learning model.
+Preferences and the last successful live batch are session-only.
+The cache is shared by app users; refreshing clears the live-news cache.

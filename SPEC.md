@@ -108,3 +108,23 @@ These files are planned; only `SPEC.md` is created now.
   `python -m unittest discover -s tests`.
 - The interface identifies the articles as sample data, and the README explains
   the category-based recommendation rule and version 1 limitations.
+
+## Live-news extension (September 2026)
+
+The requested next version adds English and Chinese publisher RSS feeds.
+Live mode is the default; offline English samples remain an explicit option.
+Keep the first version's simple filtering and ten-result limit.
+
+Acceptance criteria for this extension:
+- Language choices are All, English, and Chinese; original language is preserved.
+- Fetch BBC English feeds and RTHK Traditional Chinese feeds without API keys.
+- Cache for ten minutes and provide a manual Refresh news button that bypasses it.
+- Show UTC fetch time and timezone-normalized article publication times.
+- Sort by full timestamp, then ID, and remove duplicate article URLs.
+- A feed failure does not prevent other feeds from loading.
+- If all feeds fail, retain the current session's previous successful batch,
+  clearly mark it as previous news, and show its earlier update time.
+- If no prior batch exists, offer retry or explicit Sample data mode.
+- Test parsing, language/topic combinations, intraday sorting, deduplication,
+  partial/total failures, cache reuse, and manual refresh without real network calls.
+- Document publisher-dependent delays and the absence of continuous polling.
