@@ -51,3 +51,13 @@ class LiveNewsTests(unittest.TestCase):
         self.assertEqual(recommend([base, later], [])[0]["id"], "later")
         self.assertEqual(recommend([base, later], [], "Chinese"), [later])
         self.assertEqual(recommend([base, later], [], "English"), [base])
+
+    def test_new_language_text_survives_parsing(self):
+        for language, title in [("German", "Grüße"), ("French", "Français"),
+                                ("Italian", "Novità"), ("Spanish", "España")]:
+            with self.subTest(language=language):
+                content = XML.replace(b"News", title.encode("utf-8"))
+                article = parse_feed(content, "Publisher", language, "World")[0]
+                self.assertEqual(article["title"], title)
+                self.assertEqual(recommend([article], [], language), [article])
+                self.assertEqual(recommend([article], [], "Chinese"), [])

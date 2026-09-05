@@ -1,10 +1,83 @@
-"""Static presentation for the international news edition."""
+"""British newspaper-inspired presentation, using local CSS and SVG."""
 import streamlit as st
 
-STYLE = "\n<style>\n@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Caslon+Display&display=swap');\n:root { color-scheme: dark; }\n.stApp { background: radial-gradient(ellipse at 90% 4%, #133c48 0, transparent 36%), #08151e; }\n[data-testid=\"stHeader\"] { background: #08151ee8; }\n[data-testid=\"stMainBlockContainer\"] { max-width: 1180px; padding-top: 2.5rem; }\nhtml, body, [class*=\"st-\"], p, button { font-family: 'DM Sans', sans-serif; }\n.world-masthead { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #34505b; padding:12px 0 22px; color:#e6eee9; }\n.world-brand { font-size:20px; font-weight:700; letter-spacing:4px; }\n.world-brand span { color:#64d8bb; }\n.world-edition { font-size:11px; letter-spacing:2px; color:#9eb5bf; }\n.world-hero { position:relative; overflow:hidden; padding:62px 0 48px; min-height:300px; }\n.world-hero .eyebrow { color:#64d8bb; font-size:11px; letter-spacing:3px; font-weight:700; margin-bottom:18px; }\n.world-hero h1 { font-family:'Libre Caslon Display', Georgia, serif; font-size:76px; font-weight:400; line-height:1.02; letter-spacing:-2px; max-width:700px; margin:0 0 24px; padding:0; color:#f3f2e9; position:relative; z-index:1; }\n.world-hero h1 em { color:#80d8c2; font-weight:400; }\n.world-hero p { color:#a6bdc6; font-size:15px; line-height:1.8; position:relative; z-index:1; }\n.world-globe { position:absolute; right:-60px; top:-65px; width:560px; height:560px; opacity:.33; pointer-events:none; }\n.world-strip { display:flex; gap:30px; flex-wrap:wrap; padding:17px 0; border-top:1px solid #29434d; border-bottom:1px solid #29434d; font-size:10px; letter-spacing:2px; color:#a6bdc6; margin-bottom:22px; }\n.world-strip b { color:#7de1c5; font-weight:500; }\n[data-testid=\"stCaptionContainer\"] p { color:#a6bdc6; font-size:12px; }\n[data-testid=\"stWidgetLabel\"] p { color:#d0dfdf; font-size:12px; letter-spacing:.4px; }\n[data-testid=\"stForm\"] { background:#10232dc9; border:1px solid #29434d; border-radius:12px; }\n[data-testid=\"stVerticalBlockBorderWrapper\"]:has(.story-tag) { background:linear-gradient(145deg,#122934,#0e202b); border:1px solid #29434d!important; border-radius:14px; padding:12px; }\n[data-testid=\"stVerticalBlockBorderWrapper\"]:has(.story-tag):hover { border-color:#548d8a!important; }\n.story-tag { color:#7de1c5; font-size:10px; font-weight:700; letter-spacing:2px; padding:4px 0 8px; }\n[data-testid=\"stVerticalBlockBorderWrapper\"]:has(.story-tag) h3 { font-family:'Libre Caslon Display',Georgia,serif; font-size:29px; font-weight:400; line-height:1.22; color:#f0f1e9; }\n[data-testid=\"stText\"] { white-space:pre-wrap; color:#aec0c9; font-size:13px; line-height:1.8; }\n[data-testid=\"stLinkButton\"] a { border:1px solid #395563; border-radius:6px; color:#91e4cd; background:transparent; font-size:12px; }\n[data-testid=\"stButton\"] button, [data-testid=\"stFormSubmitButton\"] button { background:#88dfc7; color:#09251f; border:0; border-radius:6px; font-weight:700; }\n[data-testid=\"stButton\"] button:hover, [data-testid=\"stFormSubmitButton\"] button:hover { background:#b1f3df; color:#09251f; }\n.world-footer { border-top:1px solid #29434d; margin-top:32px; padding:24px 0; color:#86a0ac; font-size:11px; letter-spacing:1px; }\n@media(max-width:700px) {\n.world-hero { padding:38px 0 30px; min-height:260px; }\n.world-hero h1 { font-size:49px; max-width:90%; }\n.world-globe { right:-210px; opacity:.2; }\n.world-edition { max-width:110px; text-align:right; line-height:1.7; }\n.world-strip { gap:16px; font-size:9px; }\n[data-testid=\"stMainBlockContainer\"] { padding-top:1.5rem; }\n}\n</style>\n"
-HERO = "<div class=\"world-masthead\"><div class=\"world-brand\">WORLD<span> / </span>BRIEF</div><div class=\"world-edition\">INTERNATIONAL EDITION<br>ENGLISH &nbsp; / &nbsp; 中文</div></div>\n<div class=\"world-hero\">\n<svg class=\"world-globe\" viewBox=\"0 0 600 600\" aria-hidden=\"true\"><defs><radialGradient id=\"ocean\"><stop stop-color=\"#26716f\" stop-opacity=\".4\"/><stop offset=\"1\" stop-color=\"#123646\" stop-opacity=\".1\"/></radialGradient></defs><g transform=\"rotate(-18 300 300)\" fill=\"none\" stroke=\"#79c9bf\" stroke-width=\"1\"><circle cx=\"300\" cy=\"300\" r=\"235\" fill=\"url(#ocean)\"/><ellipse cx=\"300\" cy=\"300\" rx=\"160\" ry=\"235\"/><ellipse cx=\"300\" cy=\"300\" rx=\"80\" ry=\"235\"/><path d=\"M65 300h470M300 65v470\"/><ellipse cx=\"300\" cy=\"300\" rx=\"235\" ry=\"75\"/><ellipse cx=\"300\" cy=\"300\" rx=\"235\" ry=\"150\"/><path d=\"M120 150Q320 340 490 175M95 405Q290 210 490 420\" stroke-dasharray=\"4 7\"/><circle cx=\"165\" cy=\"257\" r=\"5\" fill=\"#a2f4d8\"/><circle cx=\"410\" cy=\"182\" r=\"5\" fill=\"#a2f4d8\"/><circle cx=\"375\" cy=\"392\" r=\"5\" fill=\"#a2f4d8\"/></g></svg>\n<div class=\"eyebrow\">A WIDER VIEW OF THE WORLD</div><h1>Many perspectives.<br><em>One connected world.</em></h1><p>Your daily window into global stories.<br>Discover the latest headlines in English and 中文.</p></div>\n<div class=\"world-strip\"><span><b>01</b> &nbsp; GLOBAL PERSPECTIVES</span><span><b>02</b> &nbsp; TWO LANGUAGES</span><span><b>03</b> &nbsp; YOUR INTERESTS</span></div>"
+STYLE = """
+<style>
+:root { color-scheme: light; }
+.stApp {
+ background-color:#f5f0e5;
+ background-image:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(86,62,32,.018) 4px),
+ radial-gradient(ellipse at top right,#e2dac7,transparent 60%);
+}
+[data-testid="stHeader"] { background:#f5f0e5ed; }
+[data-testid="stMainBlockContainer"] { max-width:1180px; padding-top:2rem; }
+.world-masthead { border-top:4px solid #223b35; border-bottom:1px solid #8e8b7d;
+ display:flex; align-items:center; justify-content:space-between; gap:20px; padding:20px 0; }
+.world-brand { font-family:Georgia,'Times New Roman',serif; font-size:36px; font-weight:700; color:#203831; letter-spacing:-1px; }
+.world-brand span { color:#843c43; }
+.world-edition { color:#625f54; font-size:10px; letter-spacing:2px; text-align:right; line-height:1.9; }
+.world-hero { position:relative; overflow:hidden; min-height:325px; padding:48px 0 32px; }
+.world-hero .eyebrow { font-size:10px; letter-spacing:3px; color:#843c43; font-weight:700; margin-bottom:20px; }
+.world-hero h1, .world-hero h1 * { font-family:Georgia,'Times New Roman',serif!important; font-weight:400; }
+.world-hero h1 { color:#203831; font-size:65px; line-height:1.12; letter-spacing:-2px; max-width:690px; position:relative; z-index:1; margin:0 0 25px; padding:0; }
+.world-hero h1 em { color:#843c43; }
+.world-hero p { color:#56594e; line-height:1.8; font-size:14px; position:relative; z-index:1; max-width:560px; }
+.westminster { position:absolute; width:510px; height:330px; right:-20px; bottom:0; opacity:.28; pointer-events:none; }
+.world-strip { display:flex; flex-wrap:wrap; gap:24px; border-top:1px solid #969385; border-bottom:3px double #969385;
+ padding:14px 0; margin-bottom:24px; font-size:10px; letter-spacing:1.5px; color:#56594e; }
+.world-strip b { color:#843c43; }
+[data-testid="stForm"] { background:#eee8da; border:1px solid #cbc3b2; border-radius:3px; }
+.story-tag { color:#843c43; font-size:10px; letter-spacing:2px; font-weight:700; padding:4px 0 8px; }
+[data-testid="stColumn"] h3 { font-family:Georgia,'Times New Roman',serif!important; font-size:28px; font-weight:400; line-height:1.25; color:#203831; }
+[data-testid="stColumn"] [data-testid="stVerticalBlock"] { border-radius:3px; }
+[data-testid="stText"] { color:#45483f; line-height:1.8; font-size:13px; }
+[data-testid="stCaptionContainer"] p { color:#64665c; }
+[data-testid="stLinkButton"] a { color:#843c43; border:1px solid #bca9a3; background:transparent; border-radius:3px; font-size:12px; }
+[data-testid="stButton"] button, [data-testid="stFormSubmitButton"] button {
+ background:#243e35; color:#fffaf0; border:1px solid #243e35; border-radius:3px; }
+[data-testid="stButton"] button:hover, [data-testid="stFormSubmitButton"] button:hover { background:#38594b; color:#fffaf0; }
+.world-footer { border-top:3px double #969385; margin-top:30px; padding:22px 0; font-family:Georgia,serif; color:#625f54; font-size:12px; }
+@media(max-width:700px) {
+.world-brand { font-size:27px; }
+.world-edition { font-size:8px; max-width:120px; }
+.world-hero { min-height:290px; padding:30px 0; }
+.world-hero h1 { font-size:43px; letter-spacing:-1px; }
+.world-hero p { max-width:85%; }
+.westminster { right:-180px; opacity:.15; }
+.world-strip { gap:12px; font-size:9px; }
+[data-testid="stMainBlockContainer"] { padding-top:1rem; }
+}
+</style>
+"""
+
+HERO = """
+<div class="world-masthead">
+ <div class="world-brand">World <span>/</span> Brief</div>
+ <div class="world-edition">THE INTERNATIONAL EDITION<br>BRITISH STYLE · GLOBAL PERSPECTIVE</div>
+</div>
+<div class="world-hero">
+ <svg class="westminster" viewBox="0 0 520 340" aria-hidden="true">
+ <g fill="none" stroke="#3e5548" stroke-width="1.5">
+ <path d="M0 310H520M0 320H520M10 290H80V200H110V290H150V155H175V290H215V185H375V290H420V170H450V290H510"/>
+ <path d="M224 185V150L231 142L238 150V185M355 185V150L362 142L369 150V185"/>
+ <path d="M270 290V105H325V290M266 105H329V88H266ZM274 88V65H321V88M278 65L298 15L317 65ZM298 15V0"/>
+ <path d="M277 160H317M277 170H317M277 265H317M277 275H317M282 177V255M292 177V255M302 177V255M312 177V255"/>
+ <circle cx="297" cy="132" r="20" fill="#f5f0e5"/><circle cx="297" cy="132" r="16"/>
+ <path d="M297 117V132L309 139M90 214V237M100 214V237M159 171V196M168 171V196M430 187V210M439 187V210"/>
+ <path d="M225 210V260M237 210V260M249 210V260M337 210V260M349 210V260M361 210V260"/>
+ <path d="M0 302Q150 297 260 305T520 300M15 334Q140 327 285 333T510 330" stroke-opacity=".5"/>
+ </g></svg>
+ <div class="eyebrow">THE WORLD, WITH A DIFFERENT ACCENT</div>
+ <h1>A classic outlook.<br><em>A world of voices.</em></h1>
+ <p>A British-inspired reading room for international news.<br>Follow the stories that matter, in six original languages.</p>
+</div>
+<div class="world-strip">
+ <span><b>EN</b> ENGLISH</span><span><b>中文</b> CHINESE</span>
+ <span><b>DE</b> DEUTSCH</span><span><b>FR</b> FRANÇAIS</span>
+ <span><b>IT</b> ITALIANO</span><span><b>ES</b> ESPAÑOL</span>
+</div>
+"""
 
 def render_header():
     st.markdown(STYLE, unsafe_allow_html=True)
     st.markdown(HERO, unsafe_allow_html=True)
-

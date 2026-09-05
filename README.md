@@ -1,6 +1,6 @@
 # News for you
 
-A small Streamlit app for English and Chinese news, with topic and language filters.
+A British newspaper-inspired Streamlit app with news in six languages, topic filters, and live refresh.
 
 ## Run locally
 
@@ -29,7 +29,7 @@ Live feeds require internet access; no API key is required.
 
 - **Live news** is the default. English feeds come from BBC; Chinese feeds come
   from RTHK and use Traditional Chinese. Articles are not translated.
-- Choose **All**, **English**, or **Chinese** under **Language / 語言**.
+- Choose **All**, **English**, **Chinese**, **German**, **French**, **Italian**, or **Spanish** under **Language / 語言**.
 - Select topics and click **Get recommendations**. No topic selection includes all topics.
 - Click **Refresh news** to fetch again immediately.
 - Results are cached for 10 minutes. An interaction after cache expiry fetches again;
@@ -77,7 +77,7 @@ network failures, duplicate links, caching, refresh, and the Streamlit reader fl
 | `requirements.txt` | Streamlit dependency |
 
 To add a feed, edit `FEEDS` in `live_news.py`: each entry contains publisher,
-language (`English` or `Chinese`), topic, and RSS URL. Entries need a title,
+language (one of the six names in `LANGUAGES`), topic, and RSS URL. Entries need a title,
 HTTP(S) article link, and valid publication date with timezone.
 Feeds are fetched concurrently, with a 12-second socket timeout and 2 MB limit
 per response. Invalid entries are skipped; duplicate article URLs are removed.
@@ -98,3 +98,23 @@ News is near real-time, not an instant streaming service. There is no translatio
 account, saved reading history, database, or machine learning model.
 Preferences and the last successful live batch are session-only.
 The cache is shared by app users; refreshing clears the live-news cache.
+
+## British edition and additional languages
+
+The design uses cream newsprint, forest green, burgundy, serif headlines, and a
+Westminster-inspired SVG skyline. The artwork is bundled locally, with no remote
+image or font downloads. Theme settings live in `.streamlit/config.toml`;
+the responsive presentation lives in `design.py`.
+
+| Language | Live publisher | Initial topic |
+| --- | --- | --- |
+| German | [DW](https://rss.dw.com/xml/rss-de-all) | World |
+| French | [France 24](https://www.france24.com/fr/rss) | World |
+| Italian | [ANSA](https://www.ansa.it/sito/notizie/mondo/mondo_rss.xml) | World |
+| Spanish | [BBC Mundo](https://feeds.bbci.co.uk/mundo/rss.xml) | World |
+
+These four feeds complement the existing English and Traditional Chinese feeds.
+Language support means reading original-language articles, not translating the
+interface or news. Other topics may have no matches in the new languages.
+Samples remain English-only. Feed failures, ten-minute caching, and session
+fallback behavior remain the same.

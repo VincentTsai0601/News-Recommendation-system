@@ -4,7 +4,7 @@ from html import escape
 from design import render_header
 
 from data_loader import DataError, load_articles
-from live_news import fetch_live_news
+from live_news import fetch_live_news, LANGUAGES
 from recommender import recommend, publication_time
 
 
@@ -18,7 +18,7 @@ def main():
     render_header()
     mode = st.radio("News source", ["Live news", "Sample data"], horizontal=True)
     if mode == "Live news":
-        st.caption("English and 中文 news • Publisher RSS feeds • Original languages")
+        st.caption("English · 中文 · Deutsch · Français · Italiano · Español — original-language news")
         st.caption("Results are cached for 10 minutes. Refresh to check now; this is not continuous streaming.")
         if st.button("Refresh news"):
             cached_news.clear()
@@ -47,7 +47,8 @@ def main():
     if not articles:
         st.info("No articles available.")
         return
-    language = st.selectbox("Language / 語言", ["All", "English", "Chinese"])
+    language = st.selectbox("Language / 語言", ["All", *LANGUAGES])
+    st.caption("German, French, Italian and Spanish currently cover World news. Articles are not translated.")
     topics = sorted({a["category"] for a in articles})
     with st.form("preferences"):
         selected = st.multiselect("Topics", topics, help="Leave empty to see all topics.")
@@ -73,7 +74,7 @@ def main():
             summary = article["summary"]
             st.text(summary if len(summary) <= 240 else summary[:240].rstrip() + "…")
             st.link_button("Read original article", article["url"])
-    st.markdown('<div class="world-footer">WORLD / BRIEF &nbsp; — &nbsp; A global outlook. An individual perspective.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="world-footer">World / Brief &nbsp; — &nbsp; British-inspired design. Six languages. A global outlook.</div>', unsafe_allow_html=True)
 
 
 if __name__ == "__main__":

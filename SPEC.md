@@ -128,3 +128,13 @@ Acceptance criteria for this extension:
 - Test parsing, language/topic combinations, intraday sorting, deduplication,
   partial/total failures, cache reuse, and manual refresh without real network calls.
 - Document publisher-dependent delays and the absence of continuous polling.
+
+## British edition and six-language extension
+
+- Present a responsive British newspaper-inspired background with local skyline artwork.
+- Preserve English and Traditional Chinese news and add German, French, Italian,
+  and Spanish using original-language publisher feeds.
+- Expose all six languages plus All; the four additional feeds initially cover World.
+- Preserve topic filtering, UTC sorting, refresh, cache, failure handling, and samples.
+- Test accented headlines and each added language in both parser and UI flows.
+- Language support does not imply automatic translation or a translated interface.

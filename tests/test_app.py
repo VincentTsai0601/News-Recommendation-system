@@ -67,3 +67,20 @@ class AppTests(unittest.TestCase):
         app.multiselect[0].set_value(["Science"])
         app.button[1].click().run()
         self.assertIn("No matching articles", app.info[0].value)
+
+    def test_each_added_language_filters_articles(self):
+        languages = {"German": "Grüße aus Berlin", "French": "Actualités françaises",
+                     "Italian": "Novità dall’Italia", "Spanish": "Noticias de España"}
+        for language, title in languages.items():
+            self.articles.append(dict(self.articles[0], id=language, language=language,
+                                      title=title, category="World",
+                                      url="https://example.com/" + language))
+        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        for language, title in languages.items():
+            with self.subTest(language=language):
+                app.selectbox[0].set_value(language).run()
+                self.assertFalse(app.exception)
+                self.assertEqual(len(app.get("link_button")), 1)
+                self.assertIn(title, [s.value for s in app.subheader])
+        app.radio[0].set_value("Sample data").run()
+        self.assertIn("No matching articles", app.info[0].value)

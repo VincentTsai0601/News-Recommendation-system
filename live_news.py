@@ -9,6 +9,10 @@ from urllib.request import Request, urlopen
 import xml.etree.ElementTree as ET
 
 FEEDS = [
+    ("DW", "German", "World", "https://rss.dw.com/xml/rss-de-all"),
+    ("France 24", "French", "World", "https://www.france24.com/fr/rss"),
+    ("ANSA", "Italian", "World", "https://www.ansa.it/sito/notizie/mondo/mondo_rss.xml"),
+    ("BBC Mundo", "Spanish", "World", "https://feeds.bbci.co.uk/mundo/rss.xml"),
     ("BBC", "English", "World", "https://feeds.bbci.co.uk/news/world/rss.xml"),
     ("BBC", "English", "Technology", "https://feeds.bbci.co.uk/news/technology/rss.xml"),
     ("BBC", "English", "Business", "https://feeds.bbci.co.uk/news/business/rss.xml"),
@@ -18,6 +22,7 @@ FEEDS = [
     ("RTHK 香港電台", "Chinese", "Business", "https://rthk.hk/rthk/news/rss/c_expressnews_cfinance.xml"),
     ("RTHK 香港電台", "Chinese", "Sports", "https://rthk.hk/rthk/news/rss/c_expressnews_csport.xml"),
 ]
+LANGUAGES = ["English", "Chinese", "German", "French", "Italian", "Spanish"]
 MAX_BYTES = 2_000_000
 
 
