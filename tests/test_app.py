@@ -19,7 +19,7 @@ class AppTests(unittest.TestCase):
         self.addCleanup(st.cache_data.clear)
 
     def test_reader_flow_and_language(self):
-        app = AppTest.from_file(str(APP_PATH)).run(timeout=30)
+        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run(timeout=30)
         self.assertFalse(app.exception)
         self.assertEqual(len(app.get("link_button")), 10)
         app.selectbox[0].set_value("Chinese").run()
@@ -33,7 +33,7 @@ class AppTests(unittest.TestCase):
         self.assertFalse(app.exception)
 
     def test_refresh_bypasses_cache(self):
-        app = AppTest.from_file(str(APP_PATH)).run()
+        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
         calls = self.fetch.call_count
         app.selectbox[0].set_value("Chinese").run()
         self.assertEqual(self.fetch.call_count, calls)
@@ -42,27 +42,27 @@ class AppTests(unittest.TestCase):
 
     def test_total_failure_then_sample_mode(self):
         self.fetch.return_value = ([], ["Feed unavailable"], "now")
-        app = AppTest.from_file(str(APP_PATH)).run()
+        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
         self.assertIn("unavailable", app.error[0].value)
         app.radio[0].set_value("Sample data").run()
         self.assertEqual(len(app.get("link_button")), 10)
         self.assertFalse(app.exception)
 
     def test_last_good_results_retained(self):
-        app = AppTest.from_file(str(APP_PATH)).run()
+        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
         self.fetch.return_value = ([], ["Feed unavailable"], "later")
         app.button[0].click().run()
         self.assertEqual(len(app.get("link_button")), 10)
         self.assertIn("previously loaded", app.warning[0].value)
 
     def test_empty_sample_data(self):
-        app = AppTest.from_file(str(APP_PATH)).run()
+        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
         with patch("data_loader.load_articles", return_value=[]):
             app.radio[0].set_value("Sample data").run()
         self.assertEqual(app.info[0].value, "No articles available.")
 
     def test_no_matches(self):
-        app = AppTest.from_file(str(APP_PATH)).run()
+        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
         app.selectbox[0].set_value("Chinese").run()
         app.multiselect[0].set_value(["Science"])
         app.button[1].click().run()

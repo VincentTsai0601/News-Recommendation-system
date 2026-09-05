@@ -1,5 +1,7 @@
 """Run with: python -m streamlit run app.py"""
 import streamlit as st
+from html import escape
+from design import render_header
 
 from data_loader import DataError, load_articles
 from live_news import fetch_live_news
@@ -12,8 +14,8 @@ def cached_news():
 
 
 def main():
-    st.set_page_config(page_title="News for you", page_icon="📰")
-    st.title("News for you")
+    st.set_page_config(page_title="World Brief | International News", page_icon="🌐", layout="wide")
+    render_header()
     mode = st.radio("News source", ["Live news", "Sample data"], horizontal=True)
     if mode == "Live news":
         st.caption("English and 中文 news • Publisher RSS feeds • Original languages")
@@ -54,19 +56,24 @@ def main():
         st.session_state["applied_topics"] = selected
     applied = st.session_state.get("applied_topics", [])
     results = recommend(articles, applied, language)
-    st.subheader("Recommended articles" if applied else "Newest articles")
+    st.subheader("Your briefing" if applied else "Across the world")
     st.caption("Topics: " + (", ".join(applied) if applied else "All topics"))
     if not results:
         st.info("No matching articles. Try different topics or languages, or clear your selection.")
         return
     st.caption(f"Showing {len(results)} articles (up to 10).")
-    for article in results:
-        with st.container(border=True):
+    for index, article in enumerate(results):
+        if index % 2 == 0:
+            columns = st.columns(2, gap="large")
+        with columns[index % 2].container(border=True):
+            st.markdown(f'<div class="story-tag">{escape(article["category"].upper())} &nbsp; / &nbsp; {escape(article.get("language", "English").upper())}</div>', unsafe_allow_html=True)
             st.subheader(article["title"])
             published = publication_time(article["published_at"]).strftime("%Y-%m-%d %H:%M UTC")
             st.text(f"{article['category']} | {article['source']} | {article.get('language', 'English')} | {published}")
-            st.text(article["summary"])
+            summary = article["summary"]
+            st.text(summary if len(summary) <= 240 else summary[:240].rstrip() + "…")
             st.link_button("Read original article", article["url"])
+    st.markdown('<div class="world-footer">WORLD / BRIEF &nbsp; — &nbsp; A global outlook. An individual perspective.</div>', unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
