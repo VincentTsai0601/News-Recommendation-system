@@ -40,3 +40,20 @@ class RecommendationTests(unittest.TestCase):
         original = list(self.articles)
         recommend(self.articles, [])
         self.assertEqual(self.articles, original)
+
+    def test_keyword_search_combines_fields_and_filters(self):
+        articles = [
+            dict(id="a", category="Science", language="English", published_at="2026-09-06",
+                 title="Solar power", summary="Research in Chile"),
+            dict(id="b", category="Science", language="Spanish", published_at="2026-09-06",
+                 title="Solar Chile", summary="Energía"),
+        ]
+        self.assertEqual([a["id"] for a in recommend(articles, ["Science"], "English", "CHILE solar")], ["a"])
+        self.assertEqual(recommend(articles, ["Sports"], "All", "solar"), [])
+        self.assertEqual(recommend(articles, [], "All", "notpresent"), [])
+        self.assertEqual(len(recommend(articles, [], "All", "  ")), 2)
+
+    def test_keyword_search_handles_unicode(self):
+        article = dict(id="a", category="World", published_at="2026-09-06",
+                       title="Straße 太陽能源 ＡＩ", summary="")
+        self.assertEqual(recommend([article], [], query="STRASSE 太陽 ai"), [article])

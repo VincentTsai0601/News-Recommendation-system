@@ -111,3 +111,16 @@ class AppTests(unittest.TestCase):
         self.assertEqual(parser.links[0]["href"], url)
         self.assertNotIn("onclick", parser.links[0])
         self.assertFalse(app.exception)
+
+    def test_search_submission_and_clear(self):
+        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        app.text_input[0].set_value("中文新聞")
+        app.button[1].click().run()
+        self.assertEqual(len(app.get("link_button")), 1)
+        app.text_input[0].set_value("unmatchedtermxyz")
+        app.button[1].click().run()
+        self.assertIn("No matching articles", app.info[0].value)
+        app.text_input[0].set_value("")
+        app.button[1].click().run()
+        self.assertEqual(len(app.get("link_button")), 10)
+        self.assertFalse(app.exception)

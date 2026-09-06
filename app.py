@@ -51,16 +51,21 @@ def main():
     st.caption("German, French, Italian and Spanish currently cover World news. Articles are not translated.")
     topics = sorted({a["category"] for a in articles})
     with st.form("preferences"):
+        query = st.text_input("Search fetched news", help="Matches all words in titles and summaries of loaded articles only. No translation or wider web search.")
         selected = st.multiselect("Topics", topics, help="Leave empty to see all topics.")
         submitted = st.form_submit_button("Get recommendations")
     if submitted:
         st.session_state["applied_topics"] = selected
+        st.session_state["applied_query"] = query
     applied = st.session_state.get("applied_topics", [])
-    results = recommend(articles, applied, language)
+    applied_query = st.session_state.get("applied_query", "")
+    results = recommend(articles, applied, language, applied_query)
+    if applied_query.strip():
+        st.text("Search in fetched articles: " + applied_query)
     st.subheader("Your briefing" if applied else "Across the world")
     st.caption("Topics: " + (", ".join(applied) if applied else "All topics"))
     if not results:
-        st.info("No matching articles. Try different topics or languages, or clear your selection.")
+        st.info("No matching articles. Try different topics, languages, or search words, or clear your selection.")
         return
     st.caption(f"Showing {len(results)} articles (up to 10).")
     for index, article in enumerate(results):

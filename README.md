@@ -125,3 +125,16 @@ fallback behavior remain the same.
 the Streamlit frame. Use the browser Back button to return (session selections
 may reset). **Open in new tab** remains available as an alternative.
 The primary link has a large touch target and does not require a popup.
+
+## Development and the worldwide-news goal
+
+See [DEVELOPMENT.md](DEVELOPMENT.md) for the AI-assisted development workflow and
+[ROADMAP.md](ROADMAP.md) for requirements, evidence, and unfinished work.
+Development happens on codex/dev; master remains the production branch.
+Search fetched news matches all entered words across titles and summaries,
+ignoring case and normalizing Unicode. It does not search beyond fetched feeds.
+
+Known production limitation: the restored same-tab article link is blocked by
+Streamlit Cloud's frame restrictions. The wording above describes its intent,
+not verified successful navigation. Repair and real-device verification belong
+on the preview branch before release. Android and LINE are not yet verified.
