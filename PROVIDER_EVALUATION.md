@@ -90,3 +90,24 @@ country modeling, offline adapter contracts, and accessibility can proceed.
 
 Second GDELT probe at 2026-09-06T10:05:59Z: HTTP 429 after 11.51 seconds,
 no Retry-After header. No coverage data returned; integration remains pending.
+
+## Experimental adapter
+
+`global_search.py` now contains a bounded GDELT adapter with offline synthetic
+fixtures. It is not called by app.py. It requests up to 50 results over 24 hours
+with simple English keywords and an optional original-language filter. Quotes,
+punctuation, and provider operators in reader input are rejected in this initial
+contract. Broader query syntax and multilingual input remain future work.
+
+Results distinguish ok, empty, rate_limited, unavailable, and invalid_response.
+There are no retries. A full-size response is flagged as potentially truncated.
+Unsafe/malformed article URLs are skipped, duplicate URL fragments are collapsed,
+and provider-observed timestamps remain separate from unknown publication dates.
+Publisher country is provider-reported; countries discussed remain unknown.
+
+The existing recommender expects publication dates, so these records must not be
+passed directly into it. Integration requires explicit observation-time display
+and sorting, successful provider evidence, request caching/rate-limit handling,
+and UI states that preserve the distinction between failed and empty searches.
+52 offline tests passed across the project after this change; this establishes
+local behavior only. No live-response or worldwide-coverage claim follows.

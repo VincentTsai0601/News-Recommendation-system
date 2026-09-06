@@ -1,6 +1,7 @@
 """Run with: python -m streamlit run app.py"""
 import streamlit as st
 from html import escape
+from datetime import datetime, timedelta, timezone
 from design import render_header
 
 from data_loader import DataError, load_articles
@@ -57,6 +58,13 @@ def main():
         st.dataframe(coverage_inventory(), hide_index=True)
     language = st.selectbox("Language / 語言", ["All", *LANGUAGES])
     st.caption("German, French, Italian and Spanish currently cover World news. Articles are not translated.")
+    period = st.selectbox("Published within", ["Any time", "Last 24 hours", "Last 7 days"], key="publication_period")
+    now = datetime.now(timezone.utc)
+    duration = {"Last 24 hours": timedelta(hours=24), "Last 7 days": timedelta(days=7)}.get(period)
+    since = now - duration if duration else None
+    until = now if duration else None
+    if duration:
+        st.caption("Publication window (UTC): " + since.strftime("%Y-%m-%d %H:%M") + " to " + now.strftime("%Y-%m-%d %H:%M") + ". Based on publisher timestamps; evaluated when the page updates.")
     topics = sorted({a["category"] for a in articles})
     with st.form("preferences"):
         query = st.text_input("Search fetched news", help="Matches all words in titles and summaries of loaded articles only. No translation or wider web search.")
@@ -67,16 +75,16 @@ def main():
         st.session_state["applied_query"] = query
     applied = st.session_state.get("applied_topics", [])
     applied_query = st.session_state.get("applied_query", "")
-    results = recommend(articles, applied, language, applied_query, limit=None)
+    results = recommend(articles, applied, language, applied_query, limit=None, since=since, until=until)
     if applied_query.strip():
         st.text("Search in fetched articles: " + applied_query)
     st.subheader("Your briefing" if applied else "Across the world")
     st.caption("Topics: " + (", ".join(applied) if applied else "All topics"))
     if not results:
-        st.info("No matching articles. Try different topics, languages, or search words, or clear your selection.")
+        st.info("No matching articles. Try a wider publication window, different topics, languages, or search words, or clear your selection.")
         return
     # Changing the result set or filters starts a new reading sequence.
-    result_context = (mode, language, tuple(applied), applied_query,
+    result_context = (mode, language, period, tuple(applied), applied_query,
                       tuple((a["id"], a["published_at"]) for a in results))
     if st.session_state.get("result_context") != result_context:
         st.session_state["result_page"] = 1

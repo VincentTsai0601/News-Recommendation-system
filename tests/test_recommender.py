@@ -64,3 +64,15 @@ class RecommendationTests(unittest.TestCase):
         matches = recommend(articles, [], limit=None)
         self.assertEqual([a["id"] for a in matches], [str(i) for i in range(23, 0, -1)])
         self.assertEqual(len(recommend(articles, [])), 10)
+
+    def test_publication_window_includes_boundaries_and_excludes_future(self):
+        from datetime import datetime, timezone
+        since = datetime(2026, 9, 5, 12, tzinfo=timezone.utc)
+        until = datetime(2026, 9, 6, 12, tzinfo=timezone.utc)
+        times = {"old": "2026-09-05T11:59:59+00:00",
+                 "start": "2026-09-05T20:00:00+08:00",
+                 "end": "2026-09-06T12:00:00+00:00",
+                 "future": "2026-09-06T12:00:01+00:00"}
+        articles = [dict(id=key, category="Science", published_at=value) for key, value in times.items()]
+        self.assertEqual([a["id"] for a in recommend(articles, [], since=since, until=until)], ["end", "start"])
+        self.assertEqual(len(recommend(articles, [])), 4)

@@ -23,7 +23,7 @@ A six-language feed reader is a starting point, not completion of this goal.
 | Reader interests | Free-text interests combined with filters; meaningful empty states; no claim to search beyond available sources | Local keyword search added on development |
 | Country coverage | Explicit country/territory catalog, coverage by source and language, honest unavailable states | Catalog added; all entries unverified; see COUNTRY_COVERAGE.md |
 | Geographic meaning | Separate publisher location from countries discussed; test against labeled articles | Not implemented |
-| Broad live discovery | Query-capable providers or indexed ingestion, publisher attribution, rights/limits evaluated, freshness measured | GDELT evaluated; first live probe rate-limited; integration pending |
+| Broad live discovery | Query-capable providers or indexed ingestion, publisher attribution, rights/limits evaluated, freshness measured | Experimental adapter tested offline; live probes rate-limited; integration pending |
 | All countries | Country-by-country evidence of retrievable relevant news; no unavailable country silently treated as supported | Not verified |
 | Reading access | Working original links on desktop, Android Chrome, and actual LINE; accessible fallback | Development uses new-tab link and copy fallback; hosted/device checks pending |
 | Inclusive access | Responsive layout, keyboard and screen-reader checks, legible contrast, language labeling | Partially implemented; audit pending |

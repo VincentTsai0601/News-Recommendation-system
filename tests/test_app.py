@@ -131,3 +131,17 @@ class AppTests(unittest.TestCase):
         self.assertFalse(app.exception)
         self.assertEqual(app.selectbox(key="result_page").value, 1)
         self.assertEqual(len(app.get("link_button")), 3)
+
+    def test_publication_filter_and_clear(self):
+        from datetime import datetime, timedelta, timezone
+        now = datetime.now(timezone.utc)
+        self.articles[0] = dict(self.articles[0], published_at=(now - timedelta(hours=1)).isoformat())
+        self.articles[1] = dict(self.articles[1], published_at=(now - timedelta(days=3)).isoformat())
+        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        app.selectbox(key="publication_period").set_value("Last 24 hours").run()
+        self.assertFalse(app.exception)
+        self.assertEqual(len(app.get("link_button")), 1)
+        app.selectbox(key="publication_period").set_value("Last 7 days").run()
+        self.assertEqual(len(app.get("link_button")), 2)
+        app.selectbox(key="publication_period").set_value("Any time").run()
+        self.assertEqual(len(app.get("link_button")), 10)

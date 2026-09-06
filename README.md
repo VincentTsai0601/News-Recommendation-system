@@ -150,3 +150,12 @@ loaded articles, not every article on the internet.
 Open **Sources in this collection** to see loaded publishers, languages, topics,
 article counts, and newest publication times before filtering. This table does
 not measure countries discussed or prove worldwide coverage.
+
+### Publication-time filtering
+
+Choose **Published within**: Any time, Last 24 hours, or Last 7 days. Recent
+windows use publisher timestamps and exclude future-dated articles. The window
+is evaluated when the page updates; it does not continuously advance while idle.
+This combines with language, topics, and search. It filters the loaded collection
+and cannot retrieve missing news. Sample articles from 2024 will normally have
+no matches in a recent window; choose Any time to explore them.
