@@ -57,3 +57,10 @@ class RecommendationTests(unittest.TestCase):
         article = dict(id="a", category="World", published_at="2026-09-06",
                        title="Straße 太陽能源 ＡＩ", summary="")
         self.assertEqual(recommend([article], [], query="STRASSE 太陽 ai"), [article])
+
+    def test_all_matches_remain_available_for_pagination(self):
+        articles = [dict(id=str(i), category="Science", published_at=f"2024-01-{i:02}")
+                    for i in range(1, 24)]
+        matches = recommend(articles, [], limit=None)
+        self.assertEqual([a["id"] for a in matches], [str(i) for i in range(23, 0, -1)])
+        self.assertEqual(len(recommend(articles, [])), 10)

@@ -124,3 +124,26 @@ class AppTests(unittest.TestCase):
         app.button[1].click().run()
         self.assertEqual(len(app.get("link_button")), 10)
         self.assertFalse(app.exception)
+
+    def test_pagination_reaches_remaining_articles_and_resets(self):
+        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        first = {s.value for s in app.subheader[1:]}
+        app.selectbox(key="result_page").set_value(2).run()
+        self.assertFalse(app.exception)
+        second = {s.value for s in app.subheader[1:]}
+        self.assertEqual(len(app.get("link_button")), 2)
+        self.assertFalse(first & second)
+        self.assertEqual(first | second, {a["title"] for a in self.articles})
+        app.selectbox[0].set_value("Chinese").run()
+        self.assertEqual(app.selectbox(key="result_page").value, 1)
+        self.assertEqual(len(app.get("link_button")), 1)
+        self.assertFalse(app.exception)
+
+    def test_pagination_resets_when_refresh_changes_results(self):
+        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        app.selectbox(key="result_page").set_value(2).run()
+        self.fetch.return_value = (self.articles[:3], [], "later")
+        app.button[0].click().run()
+        self.assertFalse(app.exception)
+        self.assertEqual(app.selectbox(key="result_page").value, 1)
+        self.assertEqual(len(app.get("link_button")), 3)

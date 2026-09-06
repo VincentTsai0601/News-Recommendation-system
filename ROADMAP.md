@@ -23,7 +23,7 @@ A six-language feed reader is a starting point, not completion of this goal.
 | Reader interests | Free-text interests combined with filters; meaningful empty states; no claim to search beyond available sources | Local keyword search added on development |
 | Country coverage | Explicit country/territory catalog, coverage by source and language, honest unavailable states | Not implemented |
 | Geographic meaning | Separate publisher location from countries discussed; test against labeled articles | Not implemented |
-| Broad live discovery | Query-capable providers or indexed ingestion, publisher attribution, rights/limits evaluated, freshness measured | Not implemented |
+| Broad live discovery | Query-capable providers or indexed ingestion, publisher attribution, rights/limits evaluated, freshness measured | GDELT evaluated; first live probe rate-limited; integration pending |
 | All countries | Country-by-country evidence of retrievable relevant news; no unavailable country silently treated as supported | Not verified |
 | Reading access | Working original links on desktop, Android Chrome, and actual LINE; accessible fallback | Known production issue; device checks pending |
 | Inclusive access | Responsive layout, keyboard and screen-reader checks, legible contrast, language labeling | Partially implemented; audit pending |
@@ -50,4 +50,12 @@ A six-language feed reader is a starting point, not completion of this goal.
 The first development search checks the title and summary of already-fetched
 articles. It matches all whitespace-separated terms, ignores case, and normalizes
 Unicode compatibility forms. It neither translates nor fetches additional news.
-This is not yet worldwide search. The ten-result cap remains.
+This is not yet worldwide search. Development now provides ten articles per page, with every loaded match accessible.
+Changing filters or refreshed results resets the page. This does not remove
+upstream feed/provider limits.
+
+## Provider evaluation
+
+See [PROVIDER_EVALUATION.md](PROVIDER_EVALUATION.md) for the first live search
+probe, remaining acceptance gates, and a reproducible diagnostic. Global search
+is not yet enabled.

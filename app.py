@@ -59,7 +59,7 @@ def main():
         st.session_state["applied_query"] = query
     applied = st.session_state.get("applied_topics", [])
     applied_query = st.session_state.get("applied_query", "")
-    results = recommend(articles, applied, language, applied_query)
+    results = recommend(articles, applied, language, applied_query, limit=None)
     if applied_query.strip():
         st.text("Search in fetched articles: " + applied_query)
     st.subheader("Your briefing" if applied else "Across the world")
@@ -67,7 +67,18 @@ def main():
     if not results:
         st.info("No matching articles. Try different topics, languages, or search words, or clear your selection.")
         return
-    st.caption(f"Showing {len(results)} articles (up to 10).")
+    # Changing the result set or filters starts a new reading sequence.
+    result_context = (mode, language, tuple(applied), applied_query,
+                      tuple((a["id"], a["published_at"]) for a in results))
+    if st.session_state.get("result_context") != result_context:
+        st.session_state["result_page"] = 1
+        st.session_state["result_context"] = result_context
+    total = len(results)
+    pages = (total + 9) // 10
+    page = st.selectbox("Results page", range(1, pages + 1), key="result_page")
+    start = (page - 1) * 10
+    results = results[start:start + 10]
+    st.caption(f"Showing {start + 1}–{start + len(results)} of {total} matching loaded articles. Page {page} of {pages}.")
     for index, article in enumerate(results):
         if index % 2 == 0:
             columns = st.columns(2, gap="large")

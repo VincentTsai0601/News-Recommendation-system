@@ -138,3 +138,9 @@ Known production limitation: the restored same-tab article link is blocked by
 Streamlit Cloud's frame restrictions. The wording above describes its intent,
 not verified successful navigation. Repair and real-device verification belong
 on the preview branch before release. Android and LINE are not yet verified.
+
+### Browsing development results
+
+Use **Results page** to reach all matching loaded articles, ten per page.
+Filters and changed refresh results return you to page one. The count describes
+loaded articles, not every article on the internet.
