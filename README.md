@@ -121,10 +121,13 @@ fallback behavior remain the same.
 
 ## Opening articles on phones
 
-**Read original article** opens the publisher in the current browser tab, leaving
-the Streamlit frame. Use the browser Back button to return (session selections
-may reset). **Open in new tab** remains available as an alternative.
-The primary link has a large touch target and does not require a popup.
+On the development branch, **Read original article** opens the publisher in a
+new tab. If nothing opens, expand **Link not opening? Copy article URL** and
+paste the address into Chrome or another browser. Publisher login, subscription,
+and regional restrictions may still apply.
+
+Local desktop browser navigation and the visible URL fallback were checked on
+2026-09-06. Actual Android Chrome, LINE, and hosted-preview checks remain pending.
 
 ## Development and the worldwide-news goal
 
@@ -135,12 +138,15 @@ Search fetched news matches all entered words across titles and summaries,
 ignoring case and normalizing Unicode. It does not search beyond fetched feeds.
 
 Known production limitation: the restored same-tab article link is blocked by
-Streamlit Cloud's frame restrictions. The wording above describes its intent,
-not verified successful navigation. Repair and real-device verification belong
-on the preview branch before release. Android and LINE are not yet verified.
+Streamlit Cloud's frame restrictions. The development repair has not been released. Hosted-preview and real-device
+verification are required before release. Android and LINE are not yet verified.
 
 ### Browsing development results
 
 Use **Results page** to reach all matching loaded articles, ten per page.
 Filters and changed refresh results return you to page one. The count describes
 loaded articles, not every article on the internet.
+
+Open **Sources in this collection** to see loaded publishers, languages, topics,
+article counts, and newest publication times before filtering. This table does
+not measure countries discussed or prove worldwide coverage.

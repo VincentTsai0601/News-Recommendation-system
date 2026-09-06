@@ -4,6 +4,8 @@ from html import escape
 from design import render_header
 
 from data_loader import DataError, load_articles
+from coverage_summary import source_coverage
+from country_catalog import coverage_inventory
 from live_news import fetch_live_news, LANGUAGES
 from recommender import recommend, publication_time
 
@@ -47,6 +49,12 @@ def main():
     if not articles:
         st.info("No articles available.")
         return
+    with st.expander("Sources in this collection"):
+        st.caption("This table describes loaded articles before your filters. Publisher and language do not identify the countries discussed. Worldwide coverage is not yet verified.")
+        st.table(source_coverage(articles))
+    with st.expander("Country coverage audit"):
+        st.caption("This is our audit inventory, not a country news filter. Every entry still needs relevant article evidence. ISO country and territory codes plus an explicitly labeled Kosovo extension; names are reference labels, not a position on sovereignty.")
+        st.dataframe(coverage_inventory(), hide_index=True)
     language = st.selectbox("Language / 語言", ["All", *LANGUAGES])
     st.caption("German, French, Italian and Spanish currently cover World news. Articles are not translated.")
     topics = sorted({a["category"] for a in articles})
@@ -89,15 +97,11 @@ def main():
             st.text(f"{article['category']} | {article['source']} | {article.get('language', 'English')} | {published}")
             summary = article["summary"]
             st.text(summary if len(summary) <= 240 else summary[:240].rstrip() + "…")
-            # _top leaves the Streamlit Cloud frame in the current browser tab.
-            article_url = escape(article["url"], quote=True)
-            st.markdown(
-                f'<a class="article-open" href="{article_url}" target="_top">'
-                'Read original article ↗</a>',
-                unsafe_allow_html=True,
-            )
-            st.caption("Opens here. Use your browser’s Back button to return.")
-            st.link_button("Open in new tab", article["url"])
+            st.link_button("Read original article ↗", article["url"])
+            st.caption("Opens the publisher in a new tab.")
+            with st.expander("Link not opening? Copy article URL"):
+                st.caption("Copy this address and paste it into Chrome or another browser. In-app browsers may handle links differently.")
+                st.code(article["url"], language=None)
     st.markdown('<div class="world-footer">World / Brief &nbsp; — &nbsp; British-inspired design. Six languages. A global outlook.</div>', unsafe_allow_html=True)
 
 

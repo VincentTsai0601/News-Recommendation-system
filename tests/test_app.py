@@ -85,31 +85,15 @@ class AppTests(unittest.TestCase):
         app.radio[0].set_value("Sample data").run()
         self.assertIn("No matching articles", app.info[0].value)
 
-    def test_article_links_use_current_tab_and_escape_url(self):
-        from html.parser import HTMLParser
-
-        class Links(HTMLParser):
-            def __init__(self):
-                super().__init__()
-                self.links = []
-
-            def handle_starttag(self, tag, attrs):
-                if tag == "a":
-                    attributes = dict(attrs)
-                    if attributes.get("class") == "article-open":
-                        self.links.append(attributes)
-
+    def test_article_link_and_copy_fallback_preserve_url(self):
         url = 'https://example.com/article?a=1&title="news"'
         self.articles[0] = dict(self.articles[0], url=url)
         app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
         app.selectbox[0].set_value("Chinese").run()
-        parser = Links()
-        for block in app.markdown:
-            parser.feed(block.value)
-        self.assertEqual(len(parser.links), 1)
-        self.assertEqual(parser.links[0]["target"], "_top")
-        self.assertEqual(parser.links[0]["href"], url)
-        self.assertNotIn("onclick", parser.links[0])
+        self.assertEqual(len(app.get("link_button")), 1)
+        self.assertEqual(app.get("link_button")[0].proto.url, url)
+        self.assertEqual(app.code[0].value, url)
+        self.assertFalse(any('target="_top"' in block.value for block in app.markdown))
         self.assertFalse(app.exception)
 
     def test_search_submission_and_clear(self):

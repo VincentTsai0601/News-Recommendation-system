@@ -66,3 +66,27 @@ means no returned matches, not worldwide coverage or an outage.
 
 This evaluation remains open. Compare another provider if reliable access cannot
 be established; do not reduce the goal to the existing RSS collection.
+
+## Alternative providers reviewed 2026-09-06
+
+| Provider | Observed contract | Consequence for this app |
+| --- | --- | --- |
+| GNews | Advertises 41 languages and 71 publisher countries. Free plan: 100 requests/day, 10 results/request, 12-hour delay; presented for development/testing. Essential: EUR 49.99/month, 1,000 requests/day, 25 results/request, real-time availability. | Needs an account/key and a production plan decision. Does not establish every-country coverage. |
+| NewsAPI | Developer terms exclude staging and production, including internal deployments. | The free developer plan cannot power our hosted app. Paid plan evaluation is still needed. |
+
+Sources: [GNews pricing and coverage](https://gnews.io/),
+[GNews search contract](https://docs.gnews.io/endpoints/search-endpoint),
+[NewsAPI terms](https://newsapi.org/terms).
+
+GNews `country` filters where articles were published; it does not identify the
+country discussed. Its `q` parameter accepts up to 200 characters, and its
+publication date filters use ISO 8601. These documented capabilities have not
+been tested with an authenticated request here. No account, trial, or subscription
+has been created. No key has been requested in chat.
+
+Next decision: user preference for free-only research versus evaluating paid
+providers is pending. No purchase is authorized. Meanwhile, source transparency,
+country modeling, offline adapter contracts, and accessibility can proceed.
+
+Second GDELT probe at 2026-09-06T10:05:59Z: HTTP 429 after 11.51 seconds,
+no Retry-After header. No coverage data returned; integration remains pending.
