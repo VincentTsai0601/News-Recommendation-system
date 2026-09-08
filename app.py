@@ -3,12 +3,13 @@ import streamlit as st
 from html import escape
 from datetime import datetime, timedelta, timezone
 from design import render_header
+from online_search_ui import render_online_search
 
 from data_loader import DataError, load_articles
 from coverage_summary import source_coverage
 from country_catalog import coverage_inventory
 from live_news import fetch_live_news, LANGUAGES
-from recommender import recommend, publication_time
+from recommender import recommend, publication_time, article_topics
 
 
 @st.cache_data(ttl=600, show_spinner=False)
@@ -19,7 +20,10 @@ def cached_news():
 def main():
     st.set_page_config(page_title="World Brief | International News", page_icon="🌐", layout="wide")
     render_header()
-    mode = st.radio("News source", ["Live news", "Sample data"], horizontal=True)
+    mode = st.radio("News source", ["Live news", "Sample data", "Search online (experimental)"], horizontal=True)
+    if mode == "Search online (experimental)":
+        render_online_search()
+        return
     if mode == "Live news":
         st.caption("English · 中文 · Deutsch · Français · Italiano · Español — original-language news")
         st.caption("Results are cached for 10 minutes. Refresh to check now; this is not continuous streaming.")
@@ -65,7 +69,7 @@ def main():
     until = now if duration else None
     if duration:
         st.caption("Publication window (UTC): " + since.strftime("%Y-%m-%d %H:%M") + " to " + now.strftime("%Y-%m-%d %H:%M") + ". Based on publisher timestamps; evaluated when the page updates.")
-    topics = sorted({a["category"] for a in articles})
+    topics = sorted({topic for a in articles for topic in article_topics(a)})
     with st.form("preferences"):
         query = st.text_input("Search fetched news", help="Matches all words in titles and summaries of loaded articles only. No translation or wider web search.")
         selected = st.multiselect("Topics", topics, help="Leave empty to see all topics.")
@@ -99,10 +103,11 @@ def main():
         if index % 2 == 0:
             columns = st.columns(2, gap="large")
         with columns[index % 2].container(border=True):
-            st.markdown(f'<div class="story-tag">{escape(article["category"].upper())} &nbsp; / &nbsp; {escape(article.get("language", "English").upper())}</div>', unsafe_allow_html=True)
+            topic_label = ", ".join(article_topics(article))
+            st.markdown(f'<div class="story-tag">{escape(topic_label.upper())} &nbsp; / &nbsp; {escape(article.get("language", "English").upper())}</div>', unsafe_allow_html=True)
             st.subheader(article["title"])
             published = publication_time(article["published_at"]).strftime("%Y-%m-%d %H:%M UTC")
-            st.text(f"{article['category']} | {article['source']} | {article.get('language', 'English')} | {published}")
+            st.text(f"{topic_label} | {article['source']} | {article.get('language', 'English')} | {published}")
             summary = article["summary"]
             st.text(summary if len(summary) <= 240 else summary[:240].rstrip() + "…")
             st.link_button("Read original article ↗", article["url"])

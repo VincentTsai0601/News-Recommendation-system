@@ -27,3 +27,12 @@ deployment was made. Publisher access restrictions remain outside this app.
 A test of HTML attributes cannot establish browser navigation. Use unit tests for
 URL preservation, an actual browser click for navigation, and the affected device
 for platform compatibility. Keep each claim within the scope of its evidence.
+
+## Online search check, 2026-09-08
+
+After restarting the local preview to load updated modules, the browser search
+Taiwan solar energy returned 100 entries. Clicking the first article opened a
+new tab and followed Google News to the expected Daily Tribune page:
+https://tribune.net.ph/2026/09/04/taiwan-tech-eyes-philippine-island-power-market
+The publisher headline and article text were visible. This is local desktop
+redirect evidence only. All 58 local tests passed before this documentation update.

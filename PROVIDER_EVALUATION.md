@@ -111,3 +111,19 @@ and sorting, successful provider evidence, request caching/rate-limit handling,
 and UI states that preserve the distinction between failed and empty searches.
 52 offline tests passed across the project after this change; this establishes
 local behavior only. No live-response or worldwide-coverage claim follows.
+
+## Google News RSS development experiment
+
+The public RSS search endpoint returned HTTP 200 with four entries for
+`climate Taiwan when:1d` on 2026-09-06T10:22:24Z. A browser search through our
+adapter for `Taiwan solar energy` on 2026-09-08T10:21:57Z returned 100 entries.
+These observations support a local experiment, not a stable API contract.
+`search_feed.py` and `online_search_ui.py` implement this separate path. They
+retain publisher attribution, distinguish outages from empty results, bound
+requests and response size, cache searches, and show Google redirect links.
+
+The locale settings are search editions, not reliable article-language or
+country labels. No country classification is inferred. No full article bodies
+are fetched or republished. Endpoint support, applicable production terms,
+coverage, real-device redirect behavior, and performance under load remain open.
+Do not automatically promote this experiment to production based on local tests.

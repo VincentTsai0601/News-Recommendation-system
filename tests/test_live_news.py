@@ -61,3 +61,16 @@ class LiveNewsTests(unittest.TestCase):
                 self.assertEqual(article["title"], title)
                 self.assertEqual(recommend([article], [], language), [article])
                 self.assertEqual(recommend([article], [], "Chinese"), [])
+
+    def test_duplicate_feed_topics_remain_searchable_without_duplicate_cards(self):
+        article = parse_feed(XML, "BBC", "English", "World")[0]
+        science = dict(article, category="Science")
+        with patch("live_news.FEEDS", [1, 2]), patch(
+            "live_news.fetch_one", side_effect=[([article], None), ([science], None)]
+        ):
+            articles, warnings, checked = fetch_live_news()
+        self.assertEqual(len(articles), 1)
+        self.assertEqual(articles[0]["categories"], ["Science", "World"])
+        self.assertEqual(len(recommend(articles, ["Science"])), 1)
+        self.assertEqual(len(recommend(articles, ["World", "Science"])), 1)
+        self.assertNotIn("categories", article)

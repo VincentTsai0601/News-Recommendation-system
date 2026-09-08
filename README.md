@@ -159,3 +159,27 @@ is evaluated when the page updates; it does not continuously advance while idle.
 This combines with language, topics, and search. It filters the loaded collection
 and cannot retrieve missing news. Sample articles from 2024 will normally have
 no matches in a recent window; choose Any time to explore them.
+
+When the same article appears in several feeds, it is shown once and retains
+all those feed topics. Selecting any of those topics can find it. These labels
+come from the feeds, not from automatic analysis of the article text.
+
+## Online search (development preview)
+
+Choose **Search online (experimental)**, enter a topic (optionally including a
+country name), select an edition, and press **Search online**. This requests
+Google News RSS results beyond our fixed publisher feeds. Searches are cached
+for ten minutes and results are displayed in pages of ten, up to the first 100
+valid feed entries. The edition influences retrieval; it does not verify article
+language, country relevance, or worldwide coverage. Results can include older
+stories; read the publication date. Query terms are sent to Google News.
+
+Links use Google News redirects. Use the URL-copy fallback if a browser cannot
+open a link. No API key is required by the observed RSS endpoint. This is an
+experimental, undocumented integration with no availability guarantee; production
+use and provider terms still need review before release.
+
+Verified 2026-09-08: 58 local tests passed, and a real browser search for
+Taiwan solar energy returned 100 articles. This is a single-query observation,
+not a country coverage audit. Hosted preview, actual Android/LINE checks, and
+remote CI remain release gates. master has not been changed.

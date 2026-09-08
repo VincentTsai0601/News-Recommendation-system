@@ -7,6 +7,7 @@ from html.parser import HTMLParser
 from urllib.parse import urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 import xml.etree.ElementTree as ET
+from recommender import article_topics
 
 FEEDS = [
     ("DW", "German", "World", "https://rss.dw.com/xml/rss-de-all"),
@@ -95,12 +96,16 @@ def fetch_live_news():
     """Return articles, feed warnings, and the UTC fetch time."""
     with ThreadPoolExecutor(max_workers=8) as pool:
         batches = list(pool.map(fetch_one, FEEDS))
-    articles, warnings, seen = [], [], set()
+    articles, warnings, seen = [], [], {}
     for batch, warning in batches:
         if warning:
             warnings.append(warning)
         for article in batch:
             if article["id"] not in seen:
-                articles.append(article)
-                seen.add(article["id"])
+                merged = dict(article, categories=article_topics(article))
+                articles.append(merged)
+                seen[article["id"]] = merged
+            else:
+                merged = seen[article["id"]]
+                merged["categories"] = sorted(set(article_topics(merged)) | set(article_topics(article)))
     return articles, warnings, datetime.now(timezone.utc).isoformat()

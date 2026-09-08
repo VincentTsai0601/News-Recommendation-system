@@ -145,3 +145,13 @@ class AppTests(unittest.TestCase):
         self.assertEqual(len(app.get("link_button")), 2)
         app.selectbox(key="publication_period").set_value("Any time").run()
         self.assertEqual(len(app.get("link_button")), 10)
+
+    def test_secondary_feed_topic_is_selectable_and_displayed(self):
+        self.articles[0] = dict(self.articles[0], categories=["World", "Environment"])
+        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        self.assertIn("Environment", app.multiselect[0].options)
+        app.multiselect[0].set_value(["Environment"])
+        app.button[1].click().run()
+        self.assertFalse(app.exception)
+        self.assertEqual(len(app.get("link_button")), 1)
+        self.assertTrue(any("Environment" in value.value for value in app.text))

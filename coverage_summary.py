@@ -1,5 +1,5 @@
 """Describe the loaded collection without claiming geographic coverage."""
-from recommender import publication_time
+from recommender import publication_time, article_topics
 
 
 def source_coverage(articles):
@@ -8,7 +8,7 @@ def source_coverage(articles):
         key = (article["source"], article.get("language", "English"))
         group = groups.setdefault(key, {"ids": set(), "topics": set(), "latest": None})
         group["ids"].add(article["id"])
-        group["topics"].add(article["category"])
+        group["topics"].update(article_topics(article))
         published = publication_time(article["published_at"])
         if group["latest"] is None or published > group["latest"]:
             group["latest"] = published

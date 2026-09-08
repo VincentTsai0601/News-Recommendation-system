@@ -8,13 +8,18 @@ def publication_time(value):
     return parsed.replace(tzinfo=timezone.utc) if parsed.tzinfo is None else parsed
 
 
+def article_topics(article):
+    """Keep the original category compatible with bundled sample records."""
+    return sorted(set(article.get("categories", [])) | {article["category"]})
+
+
 def recommend(articles, topics, language="All", query="", limit=10, since=None, until=None):
     """Return newest matches; limit=None includes every loaded match."""
     selected = set(topics)
     terms = unicodedata.normalize("NFKC", query).casefold().split()
     matches = [
         a for a in articles
-        if (not selected or a["category"] in selected)
+        if (not selected or selected.intersection(article_topics(a)))
         and (language == "All" or a.get("language", "English") == language)
         and (since is None or publication_time(a["published_at"]) >= since)
         and (until is None or publication_time(a["published_at"]) <= until)
