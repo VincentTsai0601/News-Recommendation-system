@@ -1,7 +1,10 @@
 [theme]
 base = "light"
-primaryColor = "#843c43"
+primaryColor = "#a12732"
 backgroundColor = "#f5f0e5"
 secondaryBackgroundColor = "#eee8da"
-textColor = "#203831"
+textColor = "#18324f"
 font = "sans serif"
+
+[server]
+folderWatchBlacklist = [".models", ".venv"]

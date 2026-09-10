@@ -1,0 +1,4 @@
+# Optional local AI runtime; install alongside requirements.txt.
+torch==2.14.0
+transformers==4.57.6
+sentencepiece==0.2.2

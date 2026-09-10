@@ -127,3 +127,7 @@ country labels. No country classification is inferred. No full article bodies
 are fetched or republished. Endpoint support, applicable production terms,
 coverage, real-device redirect behavior, and performance under load remain open.
 Do not automatically promote this experiment to production based on local tests.
+
+2026-09-08 update: reader request changed freshness behavior. Online search now
+makes a new request for every submission, including identical queries; it no
+longer caches responses across searches. Session results support pagination.

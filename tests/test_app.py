@@ -8,6 +8,10 @@ APP_PATH = Path(__file__).resolve().parents[1] / "app.py"
 
 
 class AppTests(unittest.TestCase):
+    def open_feeds(self):
+        app = AppTest.from_file(str(APP_PATH), default_timeout=30).run()
+        return app.radio[0].set_value("Browse publisher feeds").run()
+
     def setUp(self):
         import streamlit as st
         st.cache_data.clear()
@@ -19,7 +23,7 @@ class AppTests(unittest.TestCase):
         self.addCleanup(st.cache_data.clear)
 
     def test_reader_flow_and_language(self):
-        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run(timeout=30)
+        app = self.open_feeds()
         self.assertFalse(app.exception)
         self.assertEqual(len(app.get("link_button")), 10)
         app.selectbox[0].set_value("Chinese").run()
@@ -33,7 +37,7 @@ class AppTests(unittest.TestCase):
         self.assertFalse(app.exception)
 
     def test_refresh_bypasses_cache(self):
-        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        app = self.open_feeds()
         calls = self.fetch.call_count
         app.selectbox[0].set_value("Chinese").run()
         self.assertEqual(self.fetch.call_count, calls)
@@ -42,27 +46,27 @@ class AppTests(unittest.TestCase):
 
     def test_total_failure_then_sample_mode(self):
         self.fetch.return_value = ([], ["Feed unavailable"], "now")
-        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        app = self.open_feeds()
         self.assertIn("unavailable", app.error[0].value)
         app.radio[0].set_value("Sample data").run()
         self.assertEqual(len(app.get("link_button")), 10)
         self.assertFalse(app.exception)
 
     def test_last_good_results_retained(self):
-        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        app = self.open_feeds()
         self.fetch.return_value = ([], ["Feed unavailable"], "later")
         app.button[0].click().run()
         self.assertEqual(len(app.get("link_button")), 10)
         self.assertIn("previously loaded", app.warning[0].value)
 
     def test_empty_sample_data(self):
-        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        app = self.open_feeds()
         with patch("data_loader.load_articles", return_value=[]):
             app.radio[0].set_value("Sample data").run()
         self.assertEqual(app.info[0].value, "No articles available.")
 
     def test_no_matches(self):
-        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        app = self.open_feeds()
         app.selectbox[0].set_value("Chinese").run()
         app.multiselect[0].set_value(["Science"])
         app.button[1].click().run()
@@ -75,7 +79,7 @@ class AppTests(unittest.TestCase):
             self.articles.append(dict(self.articles[0], id=language, language=language,
                                       title=title, category="World",
                                       url="https://example.com/" + language))
-        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        app = self.open_feeds()
         for language, title in languages.items():
             with self.subTest(language=language):
                 app.selectbox[0].set_value(language).run()
@@ -88,7 +92,7 @@ class AppTests(unittest.TestCase):
     def test_article_link_and_copy_fallback_preserve_url(self):
         url = 'https://example.com/article?a=1&title="news"'
         self.articles[0] = dict(self.articles[0], url=url)
-        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        app = self.open_feeds()
         app.selectbox[0].set_value("Chinese").run()
         self.assertEqual(len(app.get("link_button")), 1)
         self.assertEqual(app.get("link_button")[0].proto.url, url)
@@ -97,7 +101,7 @@ class AppTests(unittest.TestCase):
         self.assertFalse(app.exception)
 
     def test_search_submission_and_clear(self):
-        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        app = self.open_feeds()
         app.text_input[0].set_value("中文新聞")
         app.button[1].click().run()
         self.assertEqual(len(app.get("link_button")), 1)
@@ -110,7 +114,7 @@ class AppTests(unittest.TestCase):
         self.assertFalse(app.exception)
 
     def test_pagination_reaches_remaining_articles_and_resets(self):
-        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        app = self.open_feeds()
         first = {s.value for s in app.subheader[1:]}
         app.selectbox(key="result_page").set_value(2).run()
         self.assertFalse(app.exception)
@@ -124,7 +128,7 @@ class AppTests(unittest.TestCase):
         self.assertFalse(app.exception)
 
     def test_pagination_resets_when_refresh_changes_results(self):
-        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        app = self.open_feeds()
         app.selectbox(key="result_page").set_value(2).run()
         self.fetch.return_value = (self.articles[:3], [], "later")
         app.button[0].click().run()
@@ -137,7 +141,7 @@ class AppTests(unittest.TestCase):
         now = datetime.now(timezone.utc)
         self.articles[0] = dict(self.articles[0], published_at=(now - timedelta(hours=1)).isoformat())
         self.articles[1] = dict(self.articles[1], published_at=(now - timedelta(days=3)).isoformat())
-        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        app = self.open_feeds()
         app.selectbox(key="publication_period").set_value("Last 24 hours").run()
         self.assertFalse(app.exception)
         self.assertEqual(len(app.get("link_button")), 1)
@@ -148,10 +152,21 @@ class AppTests(unittest.TestCase):
 
     def test_secondary_feed_topic_is_selectable_and_displayed(self):
         self.articles[0] = dict(self.articles[0], categories=["World", "Environment"])
-        app = AppTest.from_file(str(APP_PATH), default_timeout=15).run()
+        app = self.open_feeds()
         self.assertIn("Environment", app.multiselect[0].options)
         app.multiselect[0].set_value(["Environment"])
         app.button[1].click().run()
         self.assertFalse(app.exception)
         self.assertEqual(len(app.get("link_button")), 1)
         self.assertTrue(any("Environment" in value.value for value in app.text))
+
+    def test_recommendations_fetch_fresh_even_for_same_preferences(self):
+        app = self.open_feeds()
+        calls = self.fetch.call_count
+        app.button[1].click().run()
+        self.assertEqual(self.fetch.call_count, calls + 1)
+        app.button[1].click().run()
+        self.assertEqual(self.fetch.call_count, calls + 2)
+        app.selectbox(key="result_page").set_value(2).run()
+        self.assertEqual(self.fetch.call_count, calls + 2)
+        self.assertFalse(app.exception)
